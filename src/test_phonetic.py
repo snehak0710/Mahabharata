@@ -58,7 +58,7 @@ def test_guard_refuses_english_and_short_tokens():
 
 def labels():
     names = entity_labels(ROOT / "out/entities.ttl")
-    with open(ROOT / "annotations/lineage/mahabharata_lineage.csv", newline="") as f:
+    with open(ROOT / "annotations/lineage/mahabharata_lineage.csv", newline="", encoding="utf-8") as f:
         for row in list(csv.reader(f))[1:]:
             names |= {re.sub(r"\s*\(.*?\)", "", x).strip() for x in row if x.strip()}
     return names
@@ -66,7 +66,7 @@ def labels():
 
 def test_guard_is_current():
     """CORPUS_WORDS is derived. If a new label collides with a common word, say so."""
-    text = (ROOT / "out/semantic.trig").read_text()
+    text = (ROOT / "out/semantic.trig").read_text(encoding="utf-8")
     passages = re.findall(r'"((?:[^"\\]|\\.){40,})"', text)
     missing = derive_corpus_words(passages, labels()) - CORPUS_WORDS
     assert not missing, "add to CORPUS_WORDS in indic_phonetic.py and indic-phonetic.js: %s" % sorted(missing)
